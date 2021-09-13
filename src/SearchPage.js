@@ -12,11 +12,24 @@ class SearchPage extends Component {
     handleSearch = (query) => {
         BooksAPI.search(query)
             .then((results) => {
-                // console.log(results);
-                if(!results.error)
+
+                if(!results.error) {
+                    results.map(book_ => {
+                        this.props.books.map(book => {
+                            if (book_.id === book.id){
+                                book_.shelf = book.shelf;
+                            }
+                            return book;
+                        })
+                        // console.log(book_);
+                        return book_;
+                    })
+
                     this.setState({results:results});
-                else
+                }
+                else {
                     this.setState({results:[]});
+                }
             })
     }
     updateQuery = (query) => {
@@ -30,6 +43,7 @@ class SearchPage extends Component {
     add = (book_id,shelf) => {
         this.props.add(book_id,shelf);
     }
+
 
     render() {
         return (
@@ -60,7 +74,8 @@ class SearchPage extends Component {
                   <div className="search-books-results">
                     <ol className="books-grid">
                     {this.state.results.map(book => {
-                        // console.log(book)
+                        //  console.log(book)
+
                             return (
                                 <li key={book.id}>
                                     <Card 
@@ -70,8 +85,8 @@ class SearchPage extends Component {
                                     update = {this.update}
                                     shelf={book.shelf} 
                                     title={book.title} 
-                                    authors = {book.authors} 
-                                    image={book.imageLinks.smallThumbnail}/>
+                                    authors = {book.authors !== undefined ? book.authors: null} 
+                                    image={book.imageLinks !== undefined ? book.imageLinks.thumbnail: null}/>
                                 </li>
                            )
                         } 

@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Card from "./Card";
 class Shelf extends Component {
-
+    // state = {
+    //     current:this.props.currently
+    // }
     update = (bookid,shelf) => {
 
         this.props.update(bookid,shelf);
@@ -23,8 +25,8 @@ class Shelf extends Component {
                                     update = {this.update}
                                     shelf={book.shelf} 
                                     title={book.title} 
-                                    authors = {book.authors} 
-                                    image={book.imageLinks.smallThumbnail}/>
+                                    authors = {book.authors !== undefined ? book.authors: null} 
+                                    image={book.imageLinks !== undefined ? book.imageLinks.thumbnail: null}/>
                                 </li>
                            )
                         } 

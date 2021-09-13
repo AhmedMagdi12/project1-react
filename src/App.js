@@ -46,20 +46,20 @@ class BooksApp extends React.Component {
               book_ = book;
           }
       }
+       book_.shelf = shelf;
       BooksAPI.update(book_,shelf)
-        .then((books) => {
-            this.setState(() => ({
-                currentlyReading: books.currentlyReading,
-                wantToRead:books.wantToRead,
-                read:books.read
-            }))
+      .then((books) => {
+        this.setState((prev) => ({
+            books: prev.books.filter(b => b.id !== book_.id).concat(book_),
+            currentlyReading: books.currentlyReading,
+            wantToRead:books.wantToRead,
+            read:books.read
+        }))
         })
     }
     add = (book_id,shelf) => {
         BooksAPI.get(book_id).then((book) => {
-            // console.log(book_id);
-            // console.log(shelf);
-            // console.log(book);
+
             if(shelf === "wantToRead") {
             this.setState((current) => ({
                 wantToRead: current.wantToRead.concat([book.id]),
@@ -76,6 +76,12 @@ class BooksApp extends React.Component {
                     books:current.books.concat(book)
                 })) 
             }
+            this.update(book_id,shelf)
+        })
+    }
+    get = (id) => {
+        BooksAPI.get(id).then((book) => {
+            return book.shelf
         })
     }
 
@@ -103,7 +109,7 @@ class BooksApp extends React.Component {
             </div>
         )} />
         <Route path='/search' render={() => (
-            <SearchPage add={this.add}/>
+            <SearchPage add={this.add} books={this.state.books} get = {this.get}/>
         )} 
         />
 
